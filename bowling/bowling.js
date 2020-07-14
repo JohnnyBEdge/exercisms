@@ -11,7 +11,7 @@ export class Bowling {
     this.pinsRemaining = 10;
     this.curScore = 0;
     this.frame = 1;
-    this.curRoll = 1;
+    this.curRoll = 0;
     this.strike1 = 0;
     this.strike2 = 0;
     this.spare = 0;
@@ -37,10 +37,13 @@ export class Bowling {
     return this.curScore;
   };
 
+  //strikes and spares are tallied here, scored later. strike tally never more than 2
+
   ifStrike(){
     //if not last frame
     if (this.curRoll === 10 && !this.lastFrame) {
       //and previous roll was a strike, set strike2 counter
+        //only need to track last 2 strikes (strike 1, strike 2) bc if third strike, score has already been accounted for
       if(this.strike1 > 0){
         this.strike2 = 2;
         //else set strike 1 counter
@@ -58,9 +61,10 @@ export class Bowling {
     //checks for spare and not strike. pins remaining only set if not strike
     if(this.curRoll === this.pinsRemaining && this.curRoll !== 10){
       this.spare = 1;
-    };
+    }; 
   };
 
+  //handles strikes and spare scoring
   strikesAndSpares(){
     //adds strike bonus and removes first count
     if (this.strike1 > 0) {
@@ -93,11 +97,12 @@ export class Bowling {
   };
 
   updateGame(){
-    //handle strikes and spares first
+    //handle strikes/spares tally
     this.ifStrike();
     this.ifSpare();
     //if not last frame
     if (this.frame !== 10) {
+      //if roll 2 or strike, reset
       if (this.rollNum === 2 || this.curRoll === 10) {
         //reset rollNum, update frame, reset pins after roll 2.
         this.rollNum = 1;
